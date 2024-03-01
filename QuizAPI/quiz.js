@@ -95,5 +95,27 @@ app.post("/submitAnswer",(req,res)=>{
         })
     })
 
+    app.post("/LoginUser",(req,res)=>{
+        pool.getConnection(function(error,temcont){
+            if(!!error){
+                temcont.release();
+                console.log('Error');
+            }else{
+              console.log('connected');
+             var querystring = "select * from users where Username='"+req.body.User.FirstName+"' and userpwd= '"+req.body.User.password+"'";
+              temcont.query(querystring,function(err,result,field){
+              temcont.release();
+                if(!!err){
+                    console.log('Error');
+                    return res.json(0);
+                }else{
+                   return res.json(result.length);
+                   
+                }
+              })
+            }
+        })
+    })
+
     
-app.listen(5002);
+app.listen(5000);
