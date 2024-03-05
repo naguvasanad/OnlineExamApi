@@ -74,6 +74,30 @@ app.post("/submitAnswer",(req,res)=>{
         }
     });
     }); 
+    
+    app.post("/checkuser",(req,res)=>{
+        pool.getConnection(function(error,temcont){
+            if(!!error){
+                temcont.release();
+                console.log('Error');
+            }else{
+                console.log('connected');
+             var checkuser = "select * from users where Username = '"+req.body.username+"'";
+                              temcont.query(checkuser,function(err,result,field){
+                    temcont.release();
+                  if(!!err){
+                    console.log('Error')
+                  }else{
+                    if(result.length>0)
+                    return res.json(1);
+                else
+                    return res.json(-1);
+                  }
+
+                 })
+            }
+        })
+    })
 
     app.post("/CreateNewuser",(req,res)=>{
         pool.getConnection(function(error,temcont){
@@ -82,8 +106,8 @@ app.post("/submitAnswer",(req,res)=>{
                 console.log('Error');
             }else{
               console.log('connected');
-             var querystring = "insert into users(Username,email,userpwd)values('"+req.body.User.FirstName+"','"+req.body.User.Email+"','"+req.body.User.password+"' );";
-              temcont.query(querystring,function(err,result,field){
+              var querystring = "insert into users(Username,email,userpwd)values('"+req.body.User.FirstName+"','"+req.body.User.Email+"','"+req.body.User.password+"' );";
+                            temcont.query(querystring,function(err,result,field){
               temcont.release();
                 if(!!err){
                     console.log('Error');
@@ -92,6 +116,7 @@ app.post("/submitAnswer",(req,res)=>{
                    return res.json(1);
                 }
               })
+             
             }
         })
     })
