@@ -44,8 +44,7 @@ app.post("/submitAnswer",(req,res)=>{
         }else{
             console.log('connected');
             var element = req.body.answers;
-  
-            if(element.isItForUpdate)
+                       if(element.isItForUpdate)
             {
             var cmd="update examdetails set selectedans='"+element.answer+"' where qnum="+element.qnum+";";
                 console.log(cmd);
@@ -59,11 +58,13 @@ app.post("/submitAnswer",(req,res)=>{
                     }
                 });
             }else{
-                var cmd="insert into examdetails(userid,qnum,selectedans)values('1',"+element.qnum+",'"+element.answer+"');"
+
+                var cmd="insert into examdetails(userid,qnum,selectedans)values("+element.userId+","+element.qnum+",'"+element.answer+"');"
+               
                 temcont.query(cmd,function(err,result,field){
                      temcont.release();
                      if(!!err){
-                         console.log('Error');
+                         console.log('Error '+err);
                      }
                      else{
                         res.json(result);
@@ -109,7 +110,8 @@ app.post("/submitAnswer",(req,res)=>{
                     console.log('Error');
                     return res.json(0);
                 }else{
-                   return res.json(result.length);
+                   return res.json(result[0]);
+                   
                    
                 }
               })
