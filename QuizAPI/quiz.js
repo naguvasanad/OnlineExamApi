@@ -99,6 +99,7 @@ app.post("/submitAnswer",(req,res)=>{
         })
     })
 
+
     app.post("/CreateNewuser",(req,res)=>{
         pool.getConnection(function(error,temcont){
             if(!!error){
@@ -121,6 +122,7 @@ app.post("/submitAnswer",(req,res)=>{
         })
     })
 
+
     app.post("/LoginUser",(req,res)=>{
         pool.getConnection(function(error,temcont){
             if(!!error){
@@ -136,13 +138,32 @@ app.post("/submitAnswer",(req,res)=>{
                     return res.json(0);
                 }else{
                    return res.json(result[0]);
-                   
-                   
+                 
+                 
                 }
               })
             }
         })
     })
 
+    app.post("/getresult",(req,res)=>{
+        pool.getConnection(function(error,temcont){
+            if(!!error){
+                temcont.release();
+                console.log('Error');
+            }else{
+                console.log('connected');
+               var query = "SELECT e.qnum, e.selectedans,q.correctopt FROM quizdb.examdetails e join questions q on e.qnum= q.qnum where userid="+req.body.user+"";
+                 temcont.query(query,function(err,result,field){
+                    temcont.release();
+                    if(!!err){
+                        console.log('Error');
+                    }else{
+                         return res.json(result);
+                    }
+                })
+            }
+        })
+    })
     
 app.listen(5000);
